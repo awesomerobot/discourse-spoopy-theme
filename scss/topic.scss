@@ -137,11 +137,33 @@
 .topic-map.--op,
 .small-action .small-action-desc,
 .post-notice,
-.topic-timer-info,
 .post-links-container .post-links {
   border-top-color: transparent;
 
   @include nbd-gnarl-rule(top);
+}
+
+// the line closing off the posts, above the footer buttons; core draws it on
+// the topic timer area, which is empty (and too short for the gnarly line)
+// unless a timer is set, so it hangs off a pseudo-element instead
+.topic-timer-info {
+  position: relative;
+  border-top-color: transparent;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -4px 0 auto;
+    height: 8px;
+    pointer-events: none;
+
+    @include nbd-gnarl-rule(center);
+  }
+}
+
+// long topics end with a topic map whose own top line does the job
+body:has(.topic-map.--bottom) .topic-timer-info::before {
+  display: none;
 }
 
 // the topic map at the bottom of a topic, ruled above and below
@@ -202,7 +224,7 @@
   &::before {
     content: "";
     position: absolute;
-    inset: auto 0 -4px;
+    inset: auto 0 -7px;
     height: 8px;
     z-index: -1;
 

@@ -1,0 +1,22 @@
+// the topic voting widget: one gnarly box around the vote button and its
+// count, with a gnarly line between them, instead of core's plain borders
+.voting-wrapper {
+  border-radius: var(--d-button-border-radius);
+  background: nbd-gnarl-box();
+
+  .voting-wrapper__button,
+  .btn[disabled]:not(.is-loading) {
+    border-color: transparent;
+    background-color: transparent;
+
+    // the box around the whole widget stands in for the button's outline
+    &::after {
+      display: none;
+    }
+  }
+
+  .voting-wrapper__count {
+    border-color: transparent;
+    background: nbd-gnarl-line() left -4px / 240px 8px repeat-x;
+  }
+}

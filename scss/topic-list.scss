@@ -41,9 +41,25 @@
   }
 }
 
-// the "last visit" separator in the list, as a gnarly red line
+// the "last visit" separator in the list, as a gnarly red line; the cell is
+// only a pixel or two tall, so the line hangs off a pseudo-element, behind
+// the "last visit" label
 .topic-list .topic-list-item-separator .topic-list-data {
+  position: relative;
   border-top-color: transparent;
 
-  @include nbd-gnarl-rule(top -4px left, "e5484d", 0.85);
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -4px 0 auto;
+    height: 8px;
+    pointer-events: none;
+
+    @include nbd-gnarl-rule(center, "e5484d", 0.85);
+  }
+}
+
+// the red line stands in for the line under the row just above it
+.topic-list .topic-list-item:has(+ .topic-list-item-separator) {
+  background-image: none;
 }

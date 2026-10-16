@@ -2,7 +2,7 @@
 
 @keyframes nbd-fly-across {
   0% {
-    transform: translate(-10vw, 0) rotate(0deg);
+    transform: translate(calc(-10vw - 120px), 0) rotate(0deg);
   }
 
   9% {
@@ -124,7 +124,7 @@
   position: absolute;
   left: 0;
   top: var(--nbd-y);
-  transform: translate(-10vw, 0);
+  transform: translate(calc(-10vw - 120px), 0);
 
   &__flutter {
     display: block;
