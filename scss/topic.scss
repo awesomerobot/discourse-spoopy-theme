@@ -1,0 +1,226 @@
+@use "lib/viewport";
+
+@keyframes nbd-pumpkin-pop {
+  0% {
+    transform: scale(1) rotate(0);
+  }
+
+  30% {
+    transform: scale(1.6) rotate(-14deg);
+  }
+
+  55% {
+    transform: scale(0.85) rotate(10deg);
+  }
+
+  80% {
+    transform: scale(1.15) rotate(-4deg);
+  }
+
+  100% {
+    transform: scale(1) rotate(0);
+  }
+}
+
+#topic-title .fancy-title {
+  text-shadow: 0 0 0.6em rgb(125 76 196 / 0.35);
+}
+
+.topic-avatar .avatar,
+.user-card .avatar,
+.user-profile-avatar .avatar {
+  box-shadow:
+    0 0 0 2px var(--secondary),
+    0 0 0 4px var(--nbd-stitch);
+}
+
+.topic-post:nth-of-type(odd) .topic-avatar .avatar {
+  transform: rotate(-3deg);
+}
+
+.topic-post:nth-of-type(even) .topic-avatar .avatar {
+  transform: rotate(3deg);
+}
+
+// the timeline handle is a lit candle: a wax stick with a drip down one side
+// and a small flame that sways and flickers on top
+@keyframes nbd-candle-flame {
+  0%,
+  100% {
+    transform: rotate(-2deg) scale(1, 1);
+    opacity: 1;
+  }
+
+  20% {
+    transform: rotate(3deg) scale(0.95, 1.08);
+  }
+
+  35% {
+    transform: rotate(-1deg) scale(1.05, 0.92);
+    opacity: 0.85;
+  }
+
+  60% {
+    transform: rotate(2deg) scale(0.97, 1.05);
+    opacity: 1;
+  }
+
+  80% {
+    transform: rotate(-3deg) scale(1.02, 0.96);
+    opacity: 0.9;
+  }
+}
+
+.nbd-candle-timeline .timeline-container .topic-timeline .timeline-handle {
+  position: relative;
+  left: 1px;
+  border-radius: 3px 3px 1px 1px;
+  background: linear-gradient(90deg, #b9ad97, #f2ead8 45%, #cfc4ad);
+  box-shadow: 0 -10px 14px -4px rgb(255 160 60 / 0.35);
+
+  // the drip
+  &::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: -1.5px;
+    width: 3px;
+    height: 9px;
+    border-radius: 2px 2px 3px 3px;
+    background: #e6dcc6;
+  }
+
+  // the flame, pivoting from its base on the wick
+  &::before {
+    content: "";
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 50%;
+    width: 8px;
+    height: 15px;
+    margin-left: -4px;
+    border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+    background: radial-gradient(
+      ellipse at 50% 72%,
+      #fff7da 0 18%,
+      #ffd27a 38%,
+      #ff8a2a 62%,
+      rgb(255 122 26 / 0) 74%
+    );
+    box-shadow: 0 0 12px 4px rgb(255 150 50 / 0.35);
+    transform-origin: 50% 100%;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: nbd-candle-flame 1.3s ease-in-out infinite;
+    }
+  }
+}
+
+.nbd-pumpkin-likes {
+  .post-action-menu__like.has-like .d-icon,
+  .topic-list .likes .d-icon {
+    filter: drop-shadow(0 0 4px var(--nbd-pumpkin-glow));
+  }
+
+  .toggle-like.heart-animation .d-icon {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: nbd-pumpkin-pop 0.7s ease-out;
+    }
+  }
+}
+
+// gnarly dividers between posts and around the topic's small notices; the
+// selectors match core's so these win
+.topic-avatar,
+.small-action .topic-avatar,
+.topic-post .topic-body,
+.topic-map.--op,
+.small-action .small-action-desc,
+.post-notice,
+.topic-timer-info,
+.post-links-container .post-links {
+  border-top-color: transparent;
+
+  @include nbd-gnarl-rule(top);
+}
+
+// the topic map at the bottom of a topic, ruled above and below
+.topic-map.--bottom {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  background-image: nbd-gnarl-line(), nbd-gnarl-line();
+  background-position:
+    top left,
+    bottom left;
+  background-repeat: repeat-x;
+  background-size: 240px 8px;
+}
+
+// the topic map's popups: the rule under each heading and between list items
+.fk-d-menu,
+.fk-d-menu-modal {
+  &.topic-map__likes-content,
+  &.topic-map__links-content,
+  &.topic-map__users-content,
+  &.topic-map__views-content {
+    h3 {
+      border-bottom-color: transparent;
+
+      @include nbd-gnarl-rule(bottom);
+    }
+  }
+
+  &.topic-map__likes-content li:not(:last-of-type) a,
+  &.topic-map__links-content li:not(:last-of-type) {
+    border-bottom-color: transparent;
+
+    @include nbd-gnarl-rule(bottom);
+  }
+}
+
+// on small screens core divides posts with a border on the article instead,
+// so the avatar and body drop theirs to avoid a doubled line
+@include viewport.until(sm) {
+  .topic-post > article {
+    border-top-color: transparent;
+
+    @include nbd-gnarl-rule(top);
+  }
+
+  .topic-post .topic-avatar,
+  .topic-post .topic-body {
+    background-image: none;
+  }
+}
+
+// the "last visit" line, in red; drawn behind its label, since the line
+// itself is only a border with no height
+.small-action.topic-post-visited .topic-post-visited-line {
+  position: relative;
+  border-bottom-color: transparent;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: auto 0 -4px;
+    height: 8px;
+    z-index: -1;
+
+    @include nbd-gnarl-rule(center, "e5484d", 0.85);
+  }
+}
+
+// the timeline's track, like the other gnarly lines
+.timeline-container .topic-timeline .timeline-scrollarea {
+  border-left-color: transparent;
+
+  @include nbd-gnarl-rule-vertical(left -3px top);
+}
+
+// the red line stands in for the next row's top line, like core's
+// overlapping borders
+.small-action.topic-post-visited
+  + :is(.topic-post, .small-action)
+  :is(.topic-avatar, .topic-body, .small-action-desc) {
+  background-image: none;
+}

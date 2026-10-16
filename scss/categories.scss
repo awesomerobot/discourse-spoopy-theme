@@ -1,0 +1,80 @@
+// category lists in every layout, desktop and mobile, on the /categories page
+// and as subcategory lists on a category's page: core's plain lines go
+// transparent and gnarly ones are drawn instead. Category colour
+// accents (the coloured left edges) are left alone.
+@mixin nbd-gnarly-category-lists {
+  // table layouts: the line under the column headings, and between rows
+  .category-list tbody {
+    @include nbd-gnarl-rule(top);
+  }
+
+  .category-list tbody tr,
+  .subcategory-list-item,
+  .latest-topic-list-item,
+  .top-topic-list-item,
+  .table-heading,
+  .category-list-item {
+    @include nbd-gnarl-rule;
+  }
+
+  // mobile's stacked category cards: ruled above the first one too
+  .category-list-item:first-child {
+    background-image: nbd-gnarl-line(), nbd-gnarl-line();
+    background-position:
+      top left,
+      bottom left;
+    background-repeat: repeat-x;
+    background-size: 240px 8px;
+  }
+
+  // mobile's "more" footer under each card; it already draws the line above
+  // it, so the last topic row in the card doesn't add another
+  .category-list-item footer {
+    @include nbd-gnarl-rule(top);
+  }
+
+  .category-list-item tr:last-child {
+    background-image: none;
+  }
+
+  // the topic table inside a mobile card has no headings to rule off, and the
+  // card's own top line is already there
+  div.category-list-item tbody {
+    background-image: none;
+  }
+
+  // box layouts: a gnarly outline; the coloured accent stays on the left,
+  // squared off so its ends meet the gnarly top and bottom lines
+  .category-box,
+  .subcategory-box {
+    border-radius: 0;
+  }
+
+  .category-box-inner,
+  .subcategory-box-inner {
+    border-top-color: transparent;
+    border-right-color: transparent;
+    border-bottom-color: transparent;
+    background-image: nbd-gnarl-box-open-left();
+  }
+}
+
+body.navigation-categories #main-outlet {
+  --content-border-color: transparent;
+  --table-border-color: transparent;
+
+  @include nbd-gnarly-category-lists;
+}
+
+// a category's own page lists its subcategories above the topics; only those
+// lists lose core's lines, so nothing else on the page is affected
+body.navigation-category #main-outlet {
+  .category-list,
+  .category-boxes,
+  .category-boxes-with-topics {
+    --content-border-color: transparent;
+    --table-border-color: transparent;
+  }
+
+  @include nbd-gnarly-category-lists;
+}

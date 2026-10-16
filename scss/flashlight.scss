@@ -1,0 +1,96 @@
+// the light from lib/flashlight.js: a warm glow at the pointer that falls
+// off into a gentle shadow over the rest of the page
+
+// mostly steady, with the odd small dip and stutter, like an old flashlight
+@keyframes nbd-beam-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  31% {
+    opacity: 1;
+  }
+
+  32% {
+    opacity: 0.78;
+  }
+
+  33% {
+    opacity: 0.95;
+  }
+
+  34% {
+    opacity: 0.82;
+  }
+
+  36% {
+    opacity: 1;
+  }
+
+  68% {
+    opacity: 0.92;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  87% {
+    opacity: 1;
+  }
+
+  88% {
+    opacity: 0.85;
+  }
+
+  89% {
+    opacity: 1;
+  }
+}
+
+.nbd-flashlight {
+  --nbd-beam-x: 50vw;
+  --nbd-beam-y: 50vh;
+  --nbd-candle-x: -999px;
+  --nbd-candle-y: -999px;
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.6s;
+  background: radial-gradient(
+    circle at var(--nbd-beam-x) var(--nbd-beam-y),
+    transparent 170px,
+    rgb(4 2 8 / 0.32) 400px
+  );
+
+  // the candle's own light: a soft hole in the shadow around its flame
+  mask-image: radial-gradient(
+    circle at var(--nbd-candle-x) var(--nbd-candle-y),
+    transparent 0,
+    transparent 24px,
+    #000 110px
+  );
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at var(--nbd-beam-x) var(--nbd-beam-y),
+      rgb(255 190 120 / 0.07) 0,
+      rgb(255 190 120 / 0.03) 90px,
+      transparent 170px
+    );
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: nbd-beam-flicker 7s infinite;
+    }
+  }
+
+  &.--on {
+    opacity: 1;
+  }
+}

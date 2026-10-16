@@ -1,0 +1,30 @@
+.nbd-spooky-fonts {
+  --heading-font-family: "IM Fell English", var(--font-family);
+
+  h1,
+  h2,
+  h3,
+  .fancy-title,
+  .topic-list .main-link .title,
+  .badge-category__name,
+  .category-title-link .category-name,
+  .d-header .title .text-logo,
+  .d-modal__title-text,
+  .user-profile-names__primary {
+    font-family: var(--heading-font-family);
+
+    // IM Fell English only comes in one weight; anything bolder would be
+    // smeared by the browser
+    font-weight: normal;
+    letter-spacing: 0.02em;
+  }
+
+  .topic-list .main-link .title {
+    font-size: var(--font-up-1);
+  }
+}
+
+// a classic serif everywhere
+:root.nbd-serif-text {
+  --font-family: georgia, "Times New Roman", serif;
+}

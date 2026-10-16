@@ -1,0 +1,45 @@
+// gnarly lines in chat, in place of its borders
+.full-page-chat {
+  border-right-color: transparent;
+
+  @include nbd-gnarl-rule-vertical(right -3px top);
+}
+
+.c-navbar-container {
+  border-bottom-color: transparent;
+
+  @include nbd-gnarl-rule(bottom -3px left);
+}
+
+// matches core's selector for the date separators' line so this one wins;
+// the 8px tall line is pulled in by its margins so it takes no net space
+.chat-message-separator-date
+  + .chat-message-separator__line-container
+  .chat-message-separator__line {
+  border-top-color: transparent;
+  height: 8px;
+  margin: -4px 0;
+
+  @include nbd-gnarl-rule(center);
+}
+
+.chat-composer__inner-container {
+  border-color: transparent;
+  background-image: nbd-gnarl-box();
+}
+
+// the date pills, including core's pinned and hover states, which bring back
+// a purple border and reset the background
+.chat-message-separator-date .chat-message-separator__text-container {
+  &,
+  &.is-pinned,
+  &.is-force-pinned {
+    .chat-message-separator__text {
+      &,
+      &:hover {
+        border-color: transparent;
+        background-image: nbd-gnarl-box();
+      }
+    }
+  }
+}

@@ -1,0 +1,45 @@
+spooky_fonts:
+  type: bool
+  default: true
+serif_text:
+  type: bool
+  default: true
+pumpkin_likes:
+  type: bool
+  default: true
+flying_critters:
+  type: bool
+  default: true
+graveyard_fog:
+  type: bool
+  default: true
+cobwebs:
+  type: bool
+  default: true
+dangling_spider:
+  type: bool
+  default: true
+crumbling_composer:
+  type: bool
+  default: true
+flashlight_pointer:
+  type: bool
+  default: true
+will_o_wisp:
+  type: bool
+  default: true
+peeking_ghost:
+  type: bool
+  default: true
+header_branches:
+  type: bool
+  default: true
+gravestone_composer:
+  type: bool
+  default: true
+candle_timeline:
+  type: bool
+  default: true
+skull_spinner:
+  type: bool
+  default: true

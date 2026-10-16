@@ -1,0 +1,19 @@
+en:
+  theme_metadata:
+    description: "A dark, moonlit Halloween theme: gnarled branches, bats, fog, a gravestone composer, and a flashlight to find your way."
+    settings:
+      spooky_fonts: "Use IM Fell English, a weathered old-print serif (loaded from Google Fonts), for headings and titles."
+      serif_text: "Use Georgia, a classic serif, for all text."
+      pumpkin_likes: "Replace the like heart with a jack-o'-lantern."
+      flying_critters: "Bats flutter across the screen."
+      peeking_ghost: "A ghost peeks up from the bottom of the screen now and then."
+      graveyard_fog: "A slow fog rolls along the bottom of the screen."
+      cobwebs: "Cobwebs in the corners of the screen."
+      gravestone_composer: "On desktop, shape the composer like a headstone set in heaps of dirt."
+      crumbling_composer: "Dirt crumbles off the headstone-shaped composer as it rises (needs the gravestone composer)."
+      flashlight_pointer: "A pool of light follows the mouse pointer, with the rest of the page a little in shadow (mouse only)."
+      header_branches: "Fill the header with a thicket of dead branches."
+      will_o_wisp: "A will-o'-wisp drifts through the branches in the header."
+      dangling_spider: "A spider rests in the top-right cobweb and now and then drops down on its thread."
+      candle_timeline: "Make the topic timeline's handle a lit candle."
+      skull_spinner: "Replace the loading spinner with a wobbling skull."

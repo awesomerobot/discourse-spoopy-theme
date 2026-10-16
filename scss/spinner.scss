@@ -1,0 +1,56 @@
+// a grinning, stitched-mouth skull that wobbles instead of spinning
+$nbd-skull: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 70'%3E%3Cpath fill='%23f2ead8' fill-rule='evenodd' d='M32 2C14 2 4 15 4 32C4 52 17 68 32 68C47 68 60 52 60 32C60 15 50 2 32 2ZM14 30C14 22 19 19 24 21C29 23 29 33 26 38C23 42 14 40 14 30ZM50 30C50 22 45 19 40 21C35 23 35 33 38 38C41 42 50 40 50 30ZM30 41L32 46L34 41L32 43ZM12 46C22 58 42 58 52 46L52 48C42 61 22 61 12 48ZM17.3 47L18.7 47L18.7 55L17.3 55ZM24.3 50L25.7 50L25.7 58L24.3 58ZM31.3 51L32.7 51L32.7 59L31.3 59ZM38.3 50L39.7 50L39.7 58L38.3 58ZM45.3 47L46.7 47L46.7 55L45.3 55Z'/%3E%3C/svg%3E");
+
+@keyframes nbd-skull-wobble {
+  0%,
+  100% {
+    transform: rotate(-12deg) translateY(0);
+  }
+
+  25% {
+    transform: rotate(0) translateY(-12%);
+  }
+
+  50% {
+    transform: rotate(12deg) translateY(0);
+  }
+
+  75% {
+    transform: rotate(0) translateY(-12%);
+  }
+}
+
+@keyframes nbd-skull-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Only paint here: sizes, margins and border widths stay with core and each
+// context, so the skull fits wherever the ring did. A transparent border-image
+// hides the ring even where a context overrides border-color.
+.nbd-skull-spinner .spinner {
+  border-radius: 0;
+  border-image: linear-gradient(transparent, transparent) 1;
+  background: $nbd-skull center / contain no-repeat border-box;
+  filter: drop-shadow(0 0 4px rgb(255 122 26 / 0.55));
+  animation: nbd-skull-wobble 1.1s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: nbd-skull-pulse 1.6s ease-in-out infinite;
+  }
+}
+
+.loading-indicator-container {
+  background-color: var(--nbd-ink);
+
+  .loading-indicator {
+    background-color: var(--nbd-pumpkin);
+    box-shadow: 0 0 8px var(--nbd-pumpkin-glow);
+  }
+}

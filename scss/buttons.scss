@@ -1,0 +1,73 @@
+.btn-primary {
+  --d-button-primary-bg-color: var(--nbd-pumpkin);
+  --d-button-primary-text-color: var(--nbd-ink);
+  --d-button-primary-icon-color: var(--nbd-ink);
+  --d-button-primary-bg-color--hover: var(--nbd-pumpkin-glow);
+  --d-button-primary-text-color--hover: var(--nbd-ink);
+  --d-button-primary-icon-color--hover: var(--nbd-ink);
+  font-weight: bold;
+
+  .discourse-no-touch &:hover,
+  &:focus-visible {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: nbd-flicker 1.4s infinite;
+    }
+  }
+}
+
+.btn-default {
+  --d-button-default-border: 1px solid transparent;
+  --d-button-default-border--hover: 1px solid transparent;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: nbd-gnarl-box();
+    pointer-events: none;
+  }
+
+  .discourse-no-touch &:hover::after {
+    background: nbd-gnarl-box("ff7a1a", 1);
+  }
+}
+
+#create-topic {
+  @media (prefers-reduced-motion: no-preference) {
+    .discourse-no-touch &:hover .d-icon {
+      animation: nbd-wobble 0.5s ease-in-out;
+    }
+  }
+}
+
+.navigation-container .nav-pills > li > a {
+  &.active {
+    --d-nav-bg-color--active: transparent;
+    --d-nav-color--active: var(--nbd-pumpkin);
+    border-color: var(--nbd-pumpkin);
+  }
+}
+
+// the active and hover underlines are gnarly pumpkin lines, doubled up a
+// pixel apart so they keep the weight of core's solid bar
+@mixin nbd-gnarl-underline($opacity) {
+  height: 8px;
+  bottom: -3px;
+  background:
+    nbd-gnarl-line("ff7a1a", $opacity) 0 50% / 240px 8px repeat-x,
+    nbd-gnarl-line("ff7a1a", $opacity) 0 calc(50% + 1px) / 240px 8px repeat-x;
+}
+
+.nav-pills > li > a,
+.nav-pills > li button {
+  &.active::after {
+    @include nbd-gnarl-underline(1);
+  }
+
+  // only styles the hover underline where core draws one
+  &:hover:not(.active)::after {
+    @include nbd-gnarl-underline(0.5);
+  }
+}

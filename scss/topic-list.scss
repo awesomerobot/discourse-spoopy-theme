@@ -1,0 +1,49 @@
+.topic-list {
+  .topic-list-header {
+    border-bottom: none;
+
+    @include nbd-gnarl-rule;
+  }
+
+  // the gnarly line replaces core's rule under the header
+  .topic-list-body {
+    border-top: none;
+  }
+
+  .topic-list-item {
+    border-bottom: none;
+
+    @include nbd-gnarl-rule;
+
+    // a little extra room above the gnarly line
+    .topic-list-data {
+      padding-bottom: calc(var(--d-topic-list-data-padding-y) + 6px);
+    }
+
+    .badge-category__wrapper {
+      display: inline-block;
+      transform: rotate(-1.5deg);
+    }
+
+    &:nth-child(even) .badge-category__wrapper {
+      transform: rotate(1.5deg);
+    }
+  }
+
+  .badge-notification.new-topic,
+  .badge-notification.unread-posts {
+    background: var(--nbd-pumpkin);
+    color: var(--nbd-ink);
+  }
+
+  .posters a:first-child .avatar {
+    box-shadow: 0 0 0 2px var(--nbd-pumpkin);
+  }
+}
+
+// the "last visit" separator in the list, as a gnarly red line
+.topic-list .topic-list-item-separator .topic-list-data {
+  border-top-color: transparent;
+
+  @include nbd-gnarl-rule(top -4px left, "e5484d", 0.85);
+}

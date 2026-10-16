@@ -1,0 +1,21 @@
+.sidebar-section-header-text {
+  color: var(--nbd-lavender);
+}
+
+.sidebar-section-link-wrapper .sidebar-section-link.active {
+  box-shadow: inset 3px 0 0 var(--nbd-pumpkin);
+}
+
+// a gnarly edge between the sidebar and the page; the extra specificity is
+// needed to clear core's solid border
+.sidebar-wrapper .sidebar-container {
+  border-right-color: transparent;
+
+  @include nbd-gnarl-rule-vertical(right -3px top);
+}
+
+.sidebar-section-wrapper {
+  border-bottom-color: transparent;
+
+  @include nbd-gnarl-rule(bottom -3px left);
+}

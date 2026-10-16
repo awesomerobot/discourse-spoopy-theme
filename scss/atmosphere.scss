@@ -1,0 +1,352 @@
+@use "lib/viewport";
+
+@keyframes nbd-fly-across {
+  0% {
+    transform: translate(-10vw, 0) rotate(0deg);
+  }
+
+  9% {
+    transform: translate(25vw, calc(var(--nbd-bob) * -1)) rotate(-8deg);
+  }
+
+  18% {
+    transform: translate(60vw, var(--nbd-bob)) rotate(7deg);
+  }
+
+  27%,
+  100% {
+    transform: translate(115vw, calc(var(--nbd-bob) * -0.5)) rotate(-3deg);
+  }
+}
+
+// the wings cycle up, level, down, level: a frame-by-frame flap
+@keyframes nbd-wings-up {
+  0%,
+  24.9% {
+    opacity: 1;
+  }
+
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes nbd-wings-mid {
+  0%,
+  24.9%,
+  50%,
+  74.9% {
+    opacity: 0;
+  }
+
+  25%,
+  49.9%,
+  75%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes nbd-wings-down {
+  0%,
+  49.9%,
+  75%,
+  100% {
+    opacity: 0;
+  }
+
+  50%,
+  74.9% {
+    opacity: 1;
+  }
+}
+
+// bats never fly straight: a jittery flutter and bank around the flight path
+@keyframes nbd-bat-flutter {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+
+  20% {
+    transform: translate(2px, -4px) rotate(-7deg);
+  }
+
+  45% {
+    transform: translate(-1px, 3px) rotate(5deg);
+  }
+
+  70% {
+    transform: translate(3px, -2px) rotate(-3deg);
+  }
+}
+
+@keyframes nbd-fog-drift {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes nbd-ghost-peek {
+  0%,
+  80%,
+  100% {
+    transform: translateY(110%);
+  }
+
+  86% {
+    transform: translateY(35%) rotate(-6deg);
+  }
+
+  90% {
+    transform: translateY(30%) rotate(5deg);
+  }
+
+  94% {
+    transform: translateY(35%) rotate(-3deg);
+  }
+}
+
+.spooky-atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nbd-bat {
+  position: absolute;
+  left: 0;
+  top: var(--nbd-y);
+  transform: translate(-10vw, 0);
+
+  &__flutter {
+    display: block;
+  }
+
+  &__body {
+    display: block;
+    width: var(--nbd-size);
+    height: calc(var(--nbd-size) / 2);
+    fill: var(--nbd-critter);
+    overflow: visible;
+  }
+
+  &__wings:not(.--up) {
+    opacity: 0;
+  }
+
+  &__eyes {
+    fill: #ff8a2a;
+    filter: drop-shadow(0 0 1.5px #ff7a1a);
+  }
+
+  // depth: far bats are small and hazy, near ones big and slightly out of focus
+  &.--far {
+    opacity: 0.6;
+    filter: blur(0.6px) drop-shadow(0 0 6px var(--nbd-critter-rim));
+  }
+
+  &.--mid,
+  &__member {
+    filter: drop-shadow(0 0 8px var(--nbd-critter-rim));
+  }
+
+  &.--near {
+    filter: blur(0.7px) drop-shadow(0 0 14px var(--nbd-critter-rim));
+  }
+
+  &__member {
+    position: absolute;
+    left: var(--nbd-x);
+    top: var(--nbd-dy);
+  }
+}
+
+.nbd-peeking-ghost {
+  position: absolute;
+  bottom: 0;
+  left: 6vw;
+  color: var(--nbd-bone);
+  opacity: 0.9;
+  filter: drop-shadow(0 0 10px rgb(190 170 220 / 0.6));
+  transform: translateY(110%);
+
+  .d-icon {
+    width: 64px;
+    height: 84px;
+  }
+}
+
+.spooky-atmosphere__fog {
+  position: absolute;
+  inset: auto 0 0;
+  height: 22vh;
+  mask-image: linear-gradient(to top, #000 30%, transparent);
+}
+
+.nbd-fog {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 200%;
+
+  // each tile is one viewport wide; the blobs must fade out before the tile
+  // edges or the repeat leaves a hard seam that drifts across the screen
+  background:
+    radial-gradient(
+        ellipse 22% 60% at 25% 85%,
+        var(--nbd-fog-color),
+        transparent 100%
+      )
+      0 0 / 50% 100% repeat-x,
+    radial-gradient(
+        ellipse 24% 50% at 72% 95%,
+        var(--nbd-fog-color),
+        transparent 100%
+      )
+      0 0 / 50% 100% repeat-x;
+
+  &--back {
+    opacity: 0.6;
+  }
+
+  &--front {
+    opacity: 0.9;
+    background-position:
+      25% 0,
+      60% 0;
+  }
+}
+
+.nbd-cobweb {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  fill: none;
+  stroke: var(--nbd-cobweb);
+  stroke-width: 1.2;
+
+  &--top-right {
+    top: var(--header-offset, 60px);
+    right: 0;
+    transform: scaleX(-1);
+  }
+
+  &--bottom-left {
+    bottom: 0;
+    left: 0;
+    transform: scaleY(-1);
+  }
+
+  @include viewport.until(sm) {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+$nbd-spider: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' d='M28 38L18 44L14 56M27.5 36.5L16 38L8 46M27.5 35L16 30L9 24M28 33L19 22L16 10M36 38L46 44L50 56M36.5 36.5L48 38L56 46M36.5 35L48 30L55 24M36 33L45 22L48 10M30 41L29 44M34 41L35 44'/%3E%3Cellipse cx='32' cy='22' rx='7' ry='9'/%3E%3Cellipse cx='32' cy='36.5' rx='4.6' ry='5.2'/%3E%3C/svg%3E";
+
+// rests in the top-right cobweb; every couple of minutes it drops out of the
+// web on its thread, sways, and climbs back up
+@keyframes nbd-spider-drop {
+  0%,
+  88%,
+  100% {
+    transform: translateY(0);
+  }
+
+  91% {
+    transform: translateY(120px);
+  }
+
+  93% {
+    transform: translateY(108px) rotate(1deg);
+  }
+
+  95% {
+    transform: translateY(120px) rotate(-0.8deg);
+  }
+}
+
+// the thread runs up behind the header, as if anchored above the web; it's a
+// thin, fainter strip that runs down to the abdomen (which starts 5px into the
+// spider image, so the body colour only covers the image below that), and
+// the mask cuts both out
+.nbd-spider {
+  --nbd-spider-rest: 40px;
+  position: absolute;
+  top: calc(var(--header-offset, 60px) + var(--nbd-spider-rest) - 226px);
+  right: 52px;
+  width: 26px;
+  height: 26px;
+  padding-top: 200px;
+  box-sizing: content-box;
+  background:
+    linear-gradient(var(--nbd-spider-thread), var(--nbd-spider-thread)) center
+      top / 1px calc(100% - 21px) no-repeat,
+    linear-gradient(var(--nbd-spider), var(--nbd-spider)) center bottom / 26px
+      21px no-repeat;
+  mask:
+    linear-gradient(#000, #000) center top / 1px calc(100% - 21px) no-repeat,
+    url($nbd-spider) center bottom / 26px 26px no-repeat;
+
+  // swing from where the thread is anchored, like a pendulum
+  transform-origin: 50% 0;
+
+  @include viewport.until(sm) {
+    --nbd-spider-rest: 24px;
+    right: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .nbd-bat {
+    animation: nbd-fly-across var(--nbd-duration) linear var(--nbd-delay)
+      infinite var(--nbd-direction);
+
+    &__flutter {
+      animation: nbd-bat-flutter var(--nbd-flutter) ease-in-out infinite;
+    }
+
+    &__wings {
+      animation: nbd-wings-up var(--nbd-flap) linear infinite;
+
+      &.--mid {
+        animation-name: nbd-wings-mid;
+      }
+
+      &.--down {
+        animation-name: nbd-wings-down;
+      }
+    }
+  }
+
+  .nbd-spider {
+    animation: nbd-spider-drop 120s ease-in-out -60s infinite;
+  }
+
+  .nbd-peeking-ghost {
+    animation: nbd-ghost-peek 45s ease-in-out 20s infinite;
+  }
+
+  .nbd-fog--back {
+    animation: nbd-fog-drift 120s linear infinite;
+  }
+
+  .nbd-fog--front {
+    animation: nbd-fog-drift 75s linear infinite reverse;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spooky-atmosphere__bats,
+  .nbd-peeking-ghost {
+    display: none;
+  }
+}

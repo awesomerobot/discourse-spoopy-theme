@@ -1,0 +1,31 @@
+{
+  "name": "Spoopy",
+  "component": false,
+  "authors": "Discourse",
+  "about_url": null,
+  "license_url": null,
+  "learn_more": "https://meta.discourse.org/t/beginners-guide-to-using-discourse-themes/91966",
+  "theme_version": "0.0.1",
+  "minimum_discourse_version": null,
+  "maximum_discourse_version": null,
+  "assets": {
+    "icons-sprite": "assets/nightmare-icons.svg"
+  },
+  "color_schemes": {
+    "Halloween Town": {
+      "primary": "ece4f2",
+      "secondary": "15101d",
+      "tertiary": "ff7a1a",
+      "quaternary": "9bd34f",
+      "header_background": "0b0811",
+      "header_primary": "f2ead8",
+      "highlight": "7d4cc4",
+      "selected": "2c1f3c",
+      "hover": "211830",
+      "danger": "e5484d",
+      "success": "9bd34f",
+      "love": "ff7a1a"
+    }
+  },
+  "modifiers": {}
+}

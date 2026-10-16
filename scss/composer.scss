@@ -1,0 +1,282 @@
+@use "lib/viewport";
+
+// headstone geometry: a segmental arch (a shallow quadratic curve) that meets
+// the sides at a shoulder, plus the slab's thickness up and to the right
+$nbd-arch-rise: 56px;
+$nbd-slab-x: 18px;
+$nbd-slab-y: 11px;
+
+// freshly turned earth heaped against the base: one soft-edged silhouette
+// that slopes up from the ground outside the stone, mounds at the corners and
+// stays low across the front; stretched to fit, so it's only a shape (mask)
+// and the texture comes from the layers painted through it
+$nbd-dirt-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 40' preserveAspectRatio='none'%3E%3Cfilter id='s'%3E%3CfeGaussianBlur stdDeviation='0.35'/%3E%3C/filter%3E%3Cpath filter='url(%23s)' d='M0 41.0L4 41.0L11 40.7L18 40.3L24 39.9L28 39.6L36 39.9L40 37.9L44 39.7L47 40.1L54 37.0L57 38.3L65 33.6L72 31.5L75 31.4L79 29.9L87 26.3L92 25.5L101 23.8L106 26.0L113 24.0L120 22.1L126 20.3L131 19.8L136 13.8L141 17.1L150 15.4L157 16.4L161 18.4L169 17.7L173 18.2L182 19.7L186 20.5L189 19.3L198 21.8L206 22.4L213 22.5L217 24.1L223 23.4L232 23.1L235 25.2L242 24.2L246 24.1L252 24.2L260 26.1L264 26.7L268 25.5L277 26.7L286 26.7L293 29.0L299 25.3L304 27.6L308 27.0L313 25.7L320 27.7L323 27.8L331 28.5L336 28.0L340 28.0L348 28.7L355 28.9L359 29.0L367 30.4L372 27.7L376 27.5L381 27.1L386 27.6L390 29.1L398 27.2L405 27.5L411 27.8L415 27.7L424 26.9L431 28.5L438 25.0L443 27.9L447 28.7L450 27.3L454 28.7L463 26.9L471 28.7L474 28.9L480 28.9L485 27.7L489 27.2L493 26.2L500 28.7L509 28.5L516 25.7L519 28.2L523 29.1L531 29.4L536 29.4L544 29.9L553 27.5L559 29.5L568 29.0L577 29.1L585 26.5L591 29.8L595 30.5L599 28.1L607 29.0L613 29.3L620 28.4L626 28.4L629 29.8L636 29.6L642 27.8L648 30.2L655 31.1L663 29.0L670 29.2L678 28.7L685 30.0L694 28.0L698 29.8L702 28.3L710 28.3L717 28.7L720 29.5L728 26.6L734 29.0L741 29.3L748 29.3L753 27.0L757 29.1L763 27.9L768 26.1L775 29.3L781 27.3L785 28.6L789 26.3L797 29.0L802 28.4L805 27.3L812 28.2L820 27.3L825 27.0L832 25.3L837 27.0L842 25.2L847 25.8L854 26.3L859 25.3L864 25.2L868 24.7L873 25.9L879 25.6L884 24.8L889 23.5L893 23.8L902 23.3L907 21.6L912 21.7L920 21.3L928 22.1L934 22.7L941 24.2L945 26.7L951 26.4L957 30.5L962 32.7L967 34.7L972 35.2L980 34.7L985 37.5L993 39.9L996 40.6L1000 41.0L1000 41.0Z'/%3E%3C/svg%3E");
+
+// the heap behind the stone: wider and taller, piled up on the right where
+// the front heap is low, and low on the left where the front one is high
+$nbd-dirt-shape-back: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1000 50' preserveAspectRatio='none'%3E%3Cfilter id='s'%3E%3CfeGaussianBlur stdDeviation='0.4'/%3E%3C/filter%3E%3Cpath filter='url(%23s)' d='M0 51.0L6 50.8L13 50.0L21 49.3L29 45.8L36 43.3L43 40.7L49 40.7L56 38.6L60 37.5L66 36.4L72 36.7L76 35.5L81 36.6L85 36.4L91 34.6L95 34.2L101 34.6L106 34.5L115 35.7L120 33.0L125 32.9L132 33.7L138 34.2L145 32.7L149 34.6L157 35.5L164 35.9L171 37.0L178 37.1L183 37.7L189 39.3L197 38.7L206 38.5L212 38.1L219 39.4L227 39.0L233 39.0L238 39.7L246 37.4L252 36.2L259 39.9L267 38.8L273 38.0L282 36.4L289 38.8L292 38.9L297 39.5L304 37.9L310 38.7L314 39.9L321 39.9L326 35.3L331 36.6L335 41.2L343 38.5L347 38.4L352 36.7L359 36.6L365 37.3L368 36.9L376 37.9L383 39.3L388 38.4L393 39.5L401 40.0L405 38.0L411 37.8L416 38.0L423 34.9L432 38.7L436 39.4L442 40.7L446 40.0L451 38.7L458 39.4L467 38.8L475 38.1L478 37.5L483 38.4L487 38.5L490 39.5L496 35.2L501 39.3L507 39.0L512 39.2L519 35.1L526 39.3L532 40.3L539 39.3L544 38.8L550 35.5L556 37.9L564 39.3L571 38.8L574 37.2L577 38.5L583 37.5L588 38.4L593 39.2L598 37.6L607 39.1L611 39.5L619 38.5L627 37.9L632 37.7L638 37.4L643 35.5L647 39.0L654 38.1L662 36.7L670 35.9L673 34.8L678 35.4L684 32.2L690 35.1L698 30.4L702 33.1L709 33.2L717 30.9L722 31.1L727 29.6L730 29.9L738 29.0L745 29.0L754 25.9L761 27.0L767 27.9L773 26.4L776 27.3L783 23.7L791 25.1L798 24.8L803 24.9L810 26.1L819 22.9L827 19.9L833 16.4L840 10.2L848 10.9L853 9.0L859 3.8L866 5.5L873 1.2L880 5.1L887 6.4L896 7.8L904 8.8L911 9.1L919 11.7L924 11.0L932 12.9L936 13.5L945 16.5L952 20.0L958 22.8L963 27.5L966 32.0L975 40.0L980 42.4L988 49.5L993 49.9L1000 51.0L1000 51.0L1000 51.0Z'/%3E%3C/svg%3E");
+
+// grains are thresholded noise, so they come out as discrete specks rather than a haze
+$nbd-dirt-grains-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.21 0 0 0 0 0.17 0 0 0 0 0.13 1.7 0 0 0 -1.15'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)'/%3E%3C/svg%3E");
+$nbd-dirt-grains-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1' numOctaves='2' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4 0 0 0 -2.15'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)'/%3E%3C/svg%3E");
+$nbd-dirt-grains-coarse: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.35' numOctaves='2' seed='11' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.22 0 0 0 0 0.17 0 0 0 0 0.13 2.5 0 0 0 -1.7'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)'/%3E%3C/svg%3E");
+$nbd-dirt-mottle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.14' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.36 0 0 0 0 0.23 0 0 0 0 0.13 0 0 0 0.24 0'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)'/%3E%3C/svg%3E");
+$nbd-dirt-clumps: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='320'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.75 0'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23n)'/%3E%3C/svg%3E");
+
+@mixin nbd-dirt($shape, $soil) {
+  content: "";
+  position: absolute;
+  background:
+    $nbd-dirt-grains-light, $nbd-dirt-grains-dark, $nbd-dirt-grains-coarse,
+    $nbd-dirt-clumps, $nbd-dirt-mottle, $soil;
+  mask: $shape center bottom / 100% 100% no-repeat;
+  pointer-events: none;
+}
+
+@mixin nbd-stone-surface {
+  background-color: var(--nbd-stone);
+  background-image:
+    nbd-grain(0.16),
+    radial-gradient(
+      ellipse 40% 60% at 0% 100%,
+      rgb(155 211 79 / 0.07),
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 30% 50% at 100% 85%,
+      rgb(155 211 79 / 0.05),
+      transparent 70%
+    ),
+    radial-gradient(
+      circle at 22% 30%,
+      rgb(255 255 255 / 0.035),
+      transparent 40%
+    ),
+    radial-gradient(circle at 78% 55%, rgb(0 0 0 / 0.18), transparent 45%),
+    // key light from the upper left, falling off across the face
+    radial-gradient(
+        ellipse 90% 80% at 20% 0%,
+        rgb(255 255 255 / 0.07),
+        transparent 65%
+      ),
+    linear-gradient(105deg, transparent 55%, rgb(0 0 0 / 0.18));
+}
+
+#reply-control {
+  --nbd-stone: #231d2c;
+  --nbd-stone-seam: rgb(200 194 206 / 0.2);
+
+  // carved-stone greys in place of the lavender-on-plum text scale
+  --primary: #e9e6eb;
+  --primary-rgb: 233, 230, 235;
+  --primary-900: #d4d1d6;
+  --primary-very-high: #d4d1d6;
+  --primary-800: #b3afb6;
+  --primary-high: #b3afb6;
+  --primary-high-or-secondary-low: #b3afb6;
+  --primary-low-mid-or-secondary-low: #b3afb6;
+  --primary-700: #a4a0a7;
+  --primary-600: #948f97;
+  --primary-medium: #948f97;
+  --primary-med-or-secondary-med: #948f97;
+  --primary-500: #858088;
+  --primary-400: #75707a;
+  --primary-low-mid: #75707a;
+  --primary-or-primary-low-mid: #75707a;
+  --primary-300: #5d5862;
+  --primary-low-mid-or-secondary-high: #5d5862;
+  --primary-med-or-secondary-high: #5d5862;
+  --primary-200: #39353d;
+  --primary-low: #39353d;
+  --primary-low-rgb: 57, 53, 61;
+  --primary-100: #322e36;
+  --primary-50: #2c2830;
+  --primary-very-low: #2c2830;
+  --primary-very-low-rgb: 44, 40, 48;
+
+  // button tokens resolve at :root, so restate the primary-based ones here to
+  // pick up the greys above
+  --d-button-default-bg-color: var(--primary-low);
+  --d-button-default-bg-color--hover: var(--primary-medium);
+  --d-button-default-icon-color: var(--primary-high);
+  --d-button-default-icon-color--hover: var(--primary-low);
+  --d-button-default-text-color: var(--primary);
+  --d-button-flat-close-icon-color: var(--primary-high);
+  --d-button-flat-close-icon-color--hover: var(--primary);
+  --d-button-flat-close-text-color: var(--primary-high);
+  --d-button-flat-icon-color: var(--primary-low-mid);
+  --d-button-flat-icon-color--hover: var(--primary);
+  --d-button-flat-text-color--disabled: var(--primary);
+  --d-button-flat-text-color--hover: var(--primary);
+  --d-button-transparent-icon-color: var(--primary-high);
+  --d-button-transparent-text-color: var(--primary);
+
+  @include nbd-stone-surface;
+}
+
+// grey seams between the composer's sections, like joins in the stone
+#reply-control {
+  .reply-to,
+  .title-and-category,
+  .title-input {
+    border-bottom-color: var(--nbd-stone-seam);
+  }
+
+  .category-input {
+    border-right-color: var(--nbd-stone-seam);
+  }
+
+  .composer-footer {
+    border-top-color: var(--nbd-stone-seam);
+  }
+}
+
+// a headstone on desktop, where the composer floats; mobile and fullscreen
+// keep the regular shape. The composer itself goes transparent and the stone
+// is drawn by its pseudo-elements, so the clip-paths that shape it don't clip
+// the composer's content: ::before is the slab's thickness, ::after the face,
+// and the dirt hangs off the footer.
+@include viewport.from(md) {
+  .nbd-gravestone-composer #reply-control.open:not(.fullscreen) {
+    // also tells the crumbling effect the composer is a headstone right now
+    --nbd-gravestone-rise: #{$nbd-arch-rise};
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    // the face shifted up and to the right, joined front shoulder to back
+    // shoulder; the arch is shallow enough that this line is the true outline
+    &::before {
+      inset: calc(-1 * $nbd-slab-y) calc(-1 * $nbd-slab-x) 0 0;
+      z-index: -2;
+
+      // the right side faces away from the light, so it's a shade darker than
+      // the top band. Its top edge runs diagonally from the front shoulder up
+      // to the back one: a triangle there, then the full strip below
+      background:
+        linear-gradient(to bottom right, transparent 50%, rgb(0 0 0 / 0.28) 50%)
+          right top #{$nbd-arch-rise} / #{$nbd-slab-x} #{$nbd-slab-y} no-repeat,
+        linear-gradient(rgb(0 0 0 / 0.28), rgb(0 0 0 / 0.28)) right bottom /
+          #{$nbd-slab-x} calc(100% - #{$nbd-arch-rise} - #{$nbd-slab-y})
+          no-repeat,
+        linear-gradient(#27262b, #1a191d 70%);
+      box-shadow: inset -1px 0 0 #121115;
+      clip-path: shape(
+        from 0 100%,
+        line to 0 calc($nbd-slab-y + $nbd-arch-rise),
+        line to $nbd-slab-x $nbd-arch-rise,
+        curve to 100% $nbd-arch-rise with calc(50% + $nbd-slab-x / 2)
+          calc(-1 * $nbd-arch-rise),
+        line to 100% calc(100% - $nbd-slab-y),
+        line to calc(100% - $nbd-slab-x) 100%,
+        close
+      );
+    }
+
+    &::after {
+      inset: 0;
+      z-index: -1;
+
+      @include nbd-stone-surface;
+      box-shadow:
+        inset 3px 0 2px -1px rgb(255 255 255 / 0.08),
+        inset 14px 0 24px -14px rgb(255 255 255 / 0.06),
+        inset -18px 0 30px -14px rgb(0 0 0 / 0.22),
+        inset 0 -40px 50px -20px rgb(0 0 0 / 0.4),
+        inset -1px 0 0 rgb(0 0 0 / 0.28);
+      clip-path: shape(
+        from 0 100%,
+        line to 0 $nbd-arch-rise,
+        curve to 100% $nbd-arch-rise with 50% calc(-1 * $nbd-arch-rise),
+        line to 100% 100%,
+        close
+      );
+    }
+
+    // drop the top row below the shoulders so the corner controls sit on the
+    // stone; padding on .reply-area gets zeroed by the composer redesign
+    .reply-to {
+      padding-top: calc($nbd-arch-rise * 0.85);
+    }
+
+    // freshly turned earth heaped in front of the stone and behind it, on the
+    // footer so the face's clip-path doesn't cut it off. The back heap sits
+    // below the slab in the composer's stacking context and is a shade darker,
+    // being further from the light.
+    .composer-footer {
+      position: relative;
+
+      &::before {
+        @include nbd-dirt(
+          $nbd-dirt-shape-back,
+          linear-gradient(#1b120b, #0c0805 60%, #040201)
+        );
+        inset: auto -140px 0;
+        height: 50px;
+        z-index: -3;
+      }
+
+      &::after {
+        @include nbd-dirt(
+          $nbd-dirt-shape,
+          (
+            radial-gradient(
+              ellipse 110px 26px at 110px 100%,
+              rgb(70 96 44 / 0.12),
+              transparent
+            ),
+            radial-gradient(
+              ellipse 110px 26px at calc(100% - 110px) 100%,
+              rgb(70 96 44 / 0.1),
+              transparent
+            ),
+            linear-gradient(#2c1e14, #170f0a 55%, #0a0604)
+          )
+        );
+        inset: auto -80px 0;
+        height: 34px;
+      }
+    }
+
+    // lift the toolbar and buttons clear of the dirt
+    .composer-footer {
+      padding-bottom: 22px;
+    }
+
+    // let the stone show through the fields
+    .reply-area .select-kit,
+    .reply-area .select-kit-header,
+    .reply-area .title-input input,
+    .d-editor-textarea-wrapper {
+      background-color: transparent;
+    }
+  }
+}
+
+// crumbs and dust from the crumbling effect (see lib/crumbling-composer.js)
+.nbd-crumbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.nbd-crumb,
+.nbd-dust {
+  position: absolute;
+  will-change: transform, opacity;
+}
+
+.nbd-dust {
+  border-radius: 50%;
+  background: radial-gradient(rgb(70 56 46 / 0.45), transparent 70%);
+  filter: blur(4px);
+}
