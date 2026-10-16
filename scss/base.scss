@@ -136,11 +136,19 @@ a:focus-visible,
 }
 
 blockquote,
-aside.quote .title + blockquote {
+aside.quote {
   border: none;
   border-left: 4px solid var(--nbd-plum);
   border-radius: var(--d-border-radius);
-  background: nbd-gnarl-box("f2ead8", 0.16), var(--primary-very-low);
+  background: nbd-gnarl-box-open-left("f2ead8", 0.16), var(--primary-very-low);
+}
+
+aside.quote {
+  .title,
+  blockquote {
+    border: none;
+    background: transparent;
+  }
 }
 
 .cooked pre code,
