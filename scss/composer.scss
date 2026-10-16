@@ -62,6 +62,11 @@ $nbd-dirt-clumps: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     linear-gradient(105deg, transparent 55%, rgb(0 0 0 / 0.18));
 }
 
+$nbd-crack: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='90' viewBox='0 0 60 90'%3E%3Cg fill='none' stroke='%23f2ead8' stroke-opacity='0.05' stroke-linecap='round' stroke-linejoin='round' transform='translate(0.9 0.9)'%3E%3Cpath stroke-width='1.8' d='M30 0L27 9L32 17L28 26L34 37L30 46'/%3E%3Cpath stroke-width='1.2' d='M30 46L36 58L33 67L38 79L35 88'/%3E%3Cpath stroke-width='0.9' d='M28 26L21 33L19 42L13 49'/%3E%3Cpath stroke-width='0.8' d='M33 67L41 72L44 81'/%3E%3C/g%3E%3Cg fill='none' stroke='%23000' stroke-opacity='0.42' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath stroke-width='1.8' d='M30 0L27 9L32 17L28 26L34 37L30 46'/%3E%3Cpath stroke-width='1.2' d='M30 46L36 58L33 67L38 79L35 88'/%3E%3Cpath stroke-width='0.9' d='M28 26L21 33L19 42L13 49'/%3E%3Cpath stroke-width='0.8' d='M33 67L41 72L44 81'/%3E%3C/g%3E%3C/svg%3E");
+
+// the crack carrying on across the top of the slab, back toward its rear edge
+$nbd-crack-top: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='17' height='11' viewBox='0 0 17 11'%3E%3Cpath fill='none' stroke='%23000' stroke-opacity='0.38' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' d='M1.5 10.5L4.7 8.9L6.3 9.3L9.5 6.2L12.3 5L13.9 2.3L15.5 1'/%3E%3C/svg%3E");
+
 #reply-control {
   --nbd-stone: #231d2c;
   --nbd-stone-seam: rgb(200 194 206 / 0.2);
@@ -112,6 +117,25 @@ $nbd-dirt-clumps: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
   --d-button-transparent-text-color: var(--primary);
 
   @include nbd-stone-surface;
+}
+
+// the toolbar's scroll buttons sit over the stone, so they're stone too
+// rather than the page's purple
+#reply-control .d-overflow-controls {
+  --fade-color: #25212b;
+
+  // fading in from the side the toolbar scrolls under, so there's no hard edge
+  .d-overflow-controls__btn {
+    background:
+      nbd-grain(0.16),
+      linear-gradient(to right, transparent, var(--fade-color) 55%);
+
+    &.--left {
+      background:
+        nbd-grain(0.16),
+        linear-gradient(to left, transparent, var(--fade-color) 55%);
+    }
+  }
 }
 
 // grey seams between the composer's sections, like joins in the stone
@@ -204,7 +228,45 @@ $nbd-dirt-clumps: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
     // drop the top row below the shoulders so the corner controls sit on the
     // stone; padding on .reply-area gets zeroed by the composer redesign
     .reply-to {
+      position: relative;
       padding-top: calc($nbd-arch-rise * 0.85);
+
+      // the crack starts at the arch's edge: at 78% across, the arch meets
+      // the top of this row
+      &::before {
+        content: "";
+        position: absolute;
+        top: 3px;
+        left: 78%;
+        width: 96px;
+        height: 144px;
+        margin-left: -48px;
+        background: $nbd-crack 0 0 / 100% 100% no-repeat;
+        pointer-events: none;
+
+        // slanting down toward the middle of the stone, pivoting where it
+        // breaks through the edge
+        transform: rotate(30deg);
+        transform-origin: 50% 0;
+      }
+
+      // and across the slab's top, from the front edge back to the rear one,
+      // bending off along the slab's depth (about 20° above horizontal)
+      &::after {
+        content: "";
+        position: absolute;
+        top: -7px;
+        left: 78%;
+        width: 17px;
+        height: 11px;
+        margin-left: -1.5px;
+        background: $nbd-crack-top no-repeat;
+        pointer-events: none;
+
+        // a touch flatter, pivoting on where it meets the face crack
+        transform: rotate(10deg) scale(1.2);
+        transform-origin: 1.5px 10.5px;
+      }
     }
 
     // freshly turned earth heaped in front of the stone and behind it, on the
