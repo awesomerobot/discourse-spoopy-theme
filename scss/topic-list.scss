@@ -30,10 +30,13 @@
     }
   }
 
-  .badge-notification.new-topic,
   .badge-notification.unread-posts {
     background: var(--nbd-pumpkin);
     color: var(--nbd-ink);
+  }
+
+  .badge-notification.new-topic::before {
+    background: var(--nbd-pumpkin);
   }
 
   .posters a:first-child .avatar {
