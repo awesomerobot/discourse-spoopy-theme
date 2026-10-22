@@ -43,3 +43,14 @@ candle_timeline:
 skull_spinner:
   type: bool
   default: true
+chat_sounds:
+  type: bool
+  default: true
+default_chat_sound:
+  type: enum
+  default: nbd_haunted_organ
+  choices:
+    - none
+    - nbd_haunted_organ
+    - nbd_moaning_ghost
+    - nbd_rattling_bones

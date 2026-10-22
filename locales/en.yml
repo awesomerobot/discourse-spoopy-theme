@@ -17,3 +17,9 @@ en:
       dangling_spider: "A spider rests in the top-right cobweb and now and then drops down on its thread."
       candle_timeline: "Make the topic timeline's handle a lit candle."
       skull_spinner: "Replace the loading spinner with a wobbling skull."
+      chat_sounds: "Add spooky chat notification sounds users can pick in their preferences."
+      default_chat_sound: "Spooky sound for users who haven't picked one, played for new messages in the channel they're viewing (needs spooky chat sounds). Users who haven't turned on chat sounds stay silent."
+  chat_sounds:
+    nbd_haunted_organ: "Haunted organ"
+    nbd_moaning_ghost: "Moaning ghost"
+    nbd_rattling_bones: "Rattling bones"

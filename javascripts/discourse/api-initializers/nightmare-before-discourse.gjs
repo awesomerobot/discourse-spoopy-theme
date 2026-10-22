@@ -1,6 +1,7 @@
 import { apiInitializer } from "discourse/lib/api";
 import SpookyAtmosphere from "../components/spooky-atmosphere";
 import WillOWisp from "../components/will-o-wisp";
+import { CHAT_SOUNDS } from "../lib/chat-sounds";
 import crumble from "../lib/crumbling-composer";
 import installFlashlight from "../lib/flashlight";
 
@@ -45,5 +46,19 @@ export default apiInitializer((api) => {
         crumble(composer);
       }
     });
+  }
+
+  // only present when chat is installed
+  if (settings.chat_sounds && api.registerChatSound) {
+    Object.entries(CHAT_SOUNDS).forEach(([name, sound]) =>
+      api.registerChatSound(name, {
+        ...sound,
+        label: themePrefix(`chat_sounds.${name}`),
+      })
+    );
+
+    if (settings.default_chat_sound !== "none") {
+      api.setDefaultChatSound?.(settings.default_chat_sound);
+    }
   }
 });
